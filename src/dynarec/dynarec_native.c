@@ -17,7 +17,7 @@
 #include "x64trace.h"
 #include "dynablock.h"
 #include "dynablock_private.h"
-#include "elfloader.h"
+// #include "elfloader.h"
 
 #include "dynarec_native.h"
 #include "dynarec_arch.h"

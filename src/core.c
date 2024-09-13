@@ -10,12 +10,12 @@
 #include <sys/syscall.h>
 #include <sys/mman.h>
 #include <pthread.h>
-#include <sys/prctl.h>
+// #include <sys/prctl.h>
 #include <stdarg.h>
 #ifdef DYNAREC
 #ifdef ARM64
-#include <linux/auxvec.h>
-#include <asm/hwcap.h>
+// #include <linux/auxvec.h>
+// #include <asm/hwcap.h>
 #endif
 #endif
 
@@ -406,54 +406,54 @@ HWCAP2_ECV
 HWCAP2_AFP
     AFP = 0b0001 => The AArch64-FPCR.{AH, FIZ, NEP} fields are supported. (Alternate floating-point behavior)
 */
-    unsigned long hwcap = real_getauxval(AT_HWCAP);
-    if(!hwcap)  // no HWCap: provide a default...
-        hwcap = HWCAP_ASIMD;
-    // first, check all needed extensions, lif half, edsp and fastmult
-    if((hwcap&HWCAP_ASIMD) == 0) {
-        printf_log(LOG_INFO, "Missing ASMID cpu support, disabling Dynarec\n");
-        box64_dynarec=0;
-        return;
-    }
-    if(hwcap&HWCAP_CRC32)
+    // unsigned long hwcap = real_getauxval(AT_HWCAP);
+    // if(!hwcap)  // no HWCap: provide a default...
+    //     hwcap = HWCAP_ASIMD;
+    // // first, check all needed extensions, lif half, edsp and fastmult
+    // if((hwcap&HWCAP_ASIMD) == 0) {
+    //     printf_log(LOG_INFO, "Missing ASMID cpu support, disabling Dynarec\n");
+    //     box64_dynarec=0;
+    //     return;
+    // }
+    // if(hwcap&HWCAP_CRC32)
         arm64_crc32 = 1;
-    if(hwcap&HWCAP_PMULL)
+    // if(hwcap&HWCAP_PMULL)
         arm64_pmull = 1;
-    if(hwcap&HWCAP_AES)
+    // if(hwcap&HWCAP_AES)
         arm64_aes = 1;
-    if(hwcap&HWCAP_ATOMICS)
+    // if(hwcap&HWCAP_ATOMICS)
         arm64_atomics = 1;
     #ifdef HWCAP_SHA1
-    if(hwcap&HWCAP_SHA1)
+    // if(hwcap&HWCAP_SHA1)
         arm64_sha1 = 1;
     #endif
     #ifdef HWCAP_SHA2
-    if(hwcap&HWCAP_SHA2)
+    // if(hwcap&HWCAP_SHA2)
         arm64_sha2 = 1;
     #endif
     #ifdef HWCAP_USCAT
-    if(hwcap&HWCAP_USCAT)
+    // if(hwcap&HWCAP_USCAT)
         arm64_uscat = 1;
     #endif
     #ifdef HWCAP_FLAGM
-    if(hwcap&HWCAP_FLAGM)
+    // if(hwcap&HWCAP_FLAGM)
         arm64_flagm = 1;
     #endif
-    unsigned long hwcap2 = real_getauxval(AT_HWCAP2);
+    // unsigned long hwcap2 = real_getauxval(AT_HWCAP2);
     #ifdef HWCAP2_FLAGM2
-    if(hwcap2&HWCAP2_FLAGM2)
+    // if(hwcap2&HWCAP2_FLAGM2)
         arm64_flagm2 = 1;
     #endif
     #ifdef HWCAP2_FRINT
-    if(hwcap2&HWCAP2_FRINT)
+    // if(hwcap2&HWCAP2_FRINT)
         arm64_frintts = 1;
     #endif
     #ifdef HWCAP2_AFP
-    if(hwcap2&HWCAP2_AFP)
+    // if(hwcap2&HWCAP2_AFP)
         arm64_afp = 1;
     #endif
     #ifdef HWCAP2_RNG
-    if(hwcap2&HWCAP2_RNG)
+    // if(hwcap2&HWCAP2_RNG)
         arm64_rndr = 1;
     #endif
     printf_log(LOG_INFO, "Dynarec for ARM64, with extension: ASIMD");
@@ -2292,10 +2292,10 @@ int initialize(int argc, const char **argv, char** env, x64emu_t** emulator, elf
             ++p;
         else
             p = my_context->fullpath;
-        if(prctl(PR_SET_NAME, p)==-1)
-            printf_log(LOG_NONE, "Error setting process name (%s)\n", strerror(errno));
-        else
-            printf_log(LOG_INFO, "Rename process to \"%s\"\n", p);
+        // if(prctl(PR_SET_NAME, p)==-1)
+        //     printf_log(LOG_NONE, "Error setting process name (%s)\n", strerror(errno));
+        // else
+        //     printf_log(LOG_INFO, "Rename process to \"%s\"\n", p);
         if(strcmp(prgname, p))
             ApplyParams(p);
         // and now all change the argv (so libs libs mesa find the correct program names)

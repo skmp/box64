@@ -16,7 +16,7 @@
 #include "bridge.h"
 #include "librarian.h"
 #include "library.h"
-#include "wrapper.h"
+// #include "wrapper.h"
 #include "x64emu.h"
 #include "signals.h"
 #include "rcfile.h"
@@ -39,7 +39,7 @@ void initAllHelpers(box64context_t* context)
     #endif
     init_pthread_helper();
     init_bridge_helper();
-    init_signal_helper(context);
+    // init_signal_helper(context);
     inited = 1;
 }
 
@@ -49,9 +49,9 @@ void finiAllHelpers(box64context_t* context)
     static int finied = 0;
     if(finied)
         return;
-    DeleteParams();
+    // DeleteParams();
     fini_pthread_helper(context);
-    fini_signal_helper();
+    // fini_signal_helper();
     fini_bridge_helper();
     #ifdef BOX32
     fini_hash_helper();
@@ -223,34 +223,34 @@ box64context_t *NewBox64Context(int argc)
 
     init_custommem_helper(context);
 
-    context->maplib = NewLibrarian(context);
-    context->local_maplib = NewLibrarian(context);
+    // context->maplib = NewLibrarian(context);
+    // context->local_maplib = NewLibrarian(context);
     context->versym = NewDictionnary();
     context->system = NewBridge();
     // Cannot use Bridge name as the map is not initialized yet
     // create vsyscall
-    context->vsyscall = AddBridge(context->system, vFEv, box64_is32bits?x86Syscall:x64Syscall, 0, NULL);
+    // context->vsyscall = AddBridge(context->system, vFEv, box64_is32bits?x86Syscall:x64Syscall, 0, NULL);
     // create the vsyscalls
     if(box64_is32bits) {
         #ifdef BOX32
         addAlternate((void*)0xffffe400, from_ptrv(context->vsyscall));
         #endif
     } else {
-        context->vsyscalls[0] = AddVSyscall(context->system, 96);
-        context->vsyscalls[1] = AddVSyscall(context->system, 201);
-        context->vsyscalls[2] = AddVSyscall(context->system, 309);
-        // create the alternate to map at address
-        addAlternate((void*)0xffffffffff600000, (void*)context->vsyscalls[0]);
-        addAlternate((void*)0xffffffffff600400, (void*)context->vsyscalls[1]);
-        addAlternate((void*)0xffffffffff600800, (void*)context->vsyscalls[2]);
+        // context->vsyscalls[0] = AddVSyscall(context->system, 96);
+        // context->vsyscalls[1] = AddVSyscall(context->system, 201);
+        // context->vsyscalls[2] = AddVSyscall(context->system, 309);
+        // // create the alternate to map at address
+        // addAlternate((void*)0xffffffffff600000, (void*)context->vsyscalls[0]);
+        // addAlternate((void*)0xffffffffff600400, (void*)context->vsyscalls[1]);
+        // addAlternate((void*)0xffffffffff600800, (void*)context->vsyscalls[2]);
     }
     // create exit bridge
-    context->exit_bridge = AddBridge(context->system, NULL, NULL, 0, NULL);
+    // context->exit_bridge = AddBridge(context->system, NULL, NULL, 0, NULL);
     // get handle to box64 itself
     #ifndef STATICBUILD
     context->box64lib = dlopen(NULL, RTLD_NOW|RTLD_GLOBAL);
     #endif
-    context->dlprivate = NewDLPrivate();
+    // context->dlprivate = NewDLPrivate();
 
     context->argc = argc;
     context->argv = (char**)box_calloc(context->argc+1, sizeof(char*));
@@ -281,8 +281,8 @@ box64context_t *NewBox64Context(int argc)
     context->segtls[4].present = 1;
     context->segtls[4].is32bits = 1;
 
-    context->globdata = NewMapSymbols();
-    context->uniques = NewMapSymbols();
+    // context->globdata = NewMapSymbols();
+    // context->uniques = NewMapSymbols();
 
     initAllHelpers(context);
     
@@ -297,168 +297,168 @@ void freeALProcWrapper(box64context_t* context);
 EXPORTDYN
 void FreeBox64Context(box64context_t** context)
 {
-    if(!context)
-        return;
+    // if(!context)
+//         return;
     
-    if(--(*context)->forked >= 0)
-        return;
+//     if(--(*context)->forked >= 0)
+//         return;
 
-    box64context_t* ctx = *context;   // local copy to do the cleanning
+//     box64context_t* ctx = *context;   // local copy to do the cleanning
 
-    //clean_current_emuthread();    // cleaning main thread seems a bad idea
-    if(ctx->local_maplib)
-        FreeLibrarian(&ctx->local_maplib, NULL);
-    if(ctx->maplib)
-        FreeLibrarian(&ctx->maplib, NULL);
-    FreeDictionnary(&ctx->versym);
+//     //clean_current_emuthread();    // cleaning main thread seems a bad idea
+//     if(ctx->local_maplib)
+//         FreeLibrarian(&ctx->local_maplib, NULL);
+//     if(ctx->maplib)
+//         FreeLibrarian(&ctx->maplib, NULL);
+//     FreeDictionnary(&ctx->versym);
 
-    for(int i=0; i<ctx->elfsize; ++i) {
-        FreeElfHeader(&ctx->elfs[i]);
-    }
-    box_free(ctx->elfs);
+//     for(int i=0; i<ctx->elfsize; ++i) {
+//         FreeElfHeader(&ctx->elfs[i]);
+//     }
+//     box_free(ctx->elfs);
 
-    FreeCollection(&ctx->box64_path);
-    FreeCollection(&ctx->box64_ld_lib);
-    FreeCollection(&ctx->box64_emulated_libs);
-    // stop trace now
-    if(ctx->dec)
-        DeleteX64TraceDecoder(&ctx->dec);
-    if(ctx->dec32)
-        DeleteX86TraceDecoder(&ctx->dec32);
-    if(ctx->zydis)
-        DeleteX64Trace(ctx);
+//     FreeCollection(&ctx->box64_path);
+//     FreeCollection(&ctx->box64_ld_lib);
+//     FreeCollection(&ctx->box64_emulated_libs);
+//     // stop trace now
+//     if(ctx->dec)
+//         DeleteX64TraceDecoder(&ctx->dec);
+//     if(ctx->dec32)
+//         DeleteX86TraceDecoder(&ctx->dec32);
+//     if(ctx->zydis)
+//         DeleteX64Trace(ctx);
 
-    if(ctx->deferredInitList)
-        box_free(ctx->deferredInitList);
+//     if(ctx->deferredInitList)
+//         box_free(ctx->deferredInitList);
 
-    /*box_free(ctx->argv);*/
+//     /*box_free(ctx->argv);*/
     
-    /*for (int i=0; i<ctx->envc; ++i)
-        box_free(ctx->envv[i]);
-    box_free(ctx->envv);*/
+//     /*for (int i=0; i<ctx->envc; ++i)
+//         box_free(ctx->envv[i]);
+//     box_free(ctx->envv);*/
 
-    if(ctx->atfork_sz) {
-        box_free(ctx->atforks);
-        ctx->atforks = NULL;
-        ctx->atfork_sz = ctx->atfork_cap = 0;
-    }
+//     if(ctx->atfork_sz) {
+//         box_free(ctx->atforks);
+//         ctx->atforks = NULL;
+//         ctx->atfork_sz = ctx->atfork_cap = 0;
+//     }
 
-    for(int i=0; i<MAX_SIGNAL; ++i)
-        if(ctx->signals[i]!=0 && ctx->signals[i]!=1) {
-            signal(i, SIG_DFL);
-        }
+//     for(int i=0; i<MAX_SIGNAL; ++i)
+//         if(ctx->signals[i]!=0 && ctx->signals[i]!=1) {
+//             signal(i, SIG_DFL);
+//         }
 
-    *context = NULL;                // bye bye my_context
+//     *context = NULL;                // bye bye my_context
 
-    CleanStackSize(ctx);
+//     CleanStackSize(ctx);
 
-    FreeDLPrivate(&ctx->dlprivate);
+//     // FreeDLPrivate(&ctx->dlprivate);
 
-    box_free(ctx->fullpath);
-    box_free(ctx->box64path);
-    box_free(ctx->bashpath);
+//     box_free(ctx->fullpath);
+//     box_free(ctx->box64path);
+//     box_free(ctx->bashpath);
 
-    FreeBridge(&ctx->system);
+//     FreeBridge(&ctx->system);
 
-    #ifndef STATICBUILD
-    freeGLProcWrapper(ctx);
-    freeALProcWrapper(ctx);
-    #endif
+//     #ifndef STATICBUILD
+//     freeGLProcWrapper(ctx);
+//     freeALProcWrapper(ctx);
+//     #endif
 
-    if(ctx->stack_clone)
-        box_free(ctx->stack_clone);
+//     if(ctx->stack_clone)
+//         box_free(ctx->stack_clone);
 
 
-    void* ptr;
-    if ((ptr = pthread_getspecific(ctx->tlskey)) != NULL) {
-        free_tlsdatasize(ptr);
-    }
-    pthread_key_delete(ctx->tlskey);
+//     void* ptr;
+//     if ((ptr = pthread_getspecific(ctx->tlskey)) != NULL) {
+//         free_tlsdatasize(ptr);
+//     }
+//     pthread_key_delete(ctx->tlskey);
 
-    if(ctx->tlsdata)
-        box_free(ctx->tlsdata);
+//     if(ctx->tlsdata)
+//         box_free(ctx->tlsdata);
 
-    free_neededlib(ctx->neededlibs);
-    ctx->neededlibs = NULL;
+//     free_neededlib(ctx->neededlibs);
+//     ctx->neededlibs = NULL;
 
-    if(ctx->emu_sig)
-        FreeX64Emu(&ctx->emu_sig);
+//     if(ctx->emu_sig)
+//         FreeX64Emu(&ctx->emu_sig);
 
-    FreeMapSymbols(&ctx->globdata);
-    FreeMapSymbols(&ctx->uniques);
+//     // FreeMapSymbols(&ctx->globdata);
+//     // FreeMapSymbols(&ctx->uniques);
 
-#ifdef DYNAREC
-    //dynarec_log(LOG_INFO, "BOX64 Dynarec at exit: Max DB=%d, righter=%d\n", ctx->max_db_size, rb_get_righter(ctx->db_sizes));
-    delete_rbtree(ctx->db_sizes);
-#endif
+// #ifdef DYNAREC
+//     //dynarec_log(LOG_INFO, "BOX64 Dynarec at exit: Max DB=%d, righter=%d\n", ctx->max_db_size, rb_get_righter(ctx->db_sizes));
+//     delete_rbtree(ctx->db_sizes);
+// #endif
 
-    finiAllHelpers(ctx);
+//     finiAllHelpers(ctx);
 
-#ifdef DYNAREC
-    pthread_mutex_destroy(&ctx->mutex_lock);
-#else
-    pthread_mutex_destroy(&ctx->mutex_trace);
-    pthread_mutex_destroy(&ctx->mutex_lock);
-    pthread_mutex_destroy(&ctx->mutex_tls);
-    pthread_mutex_destroy(&ctx->mutex_thread);
-    pthread_mutex_destroy(&ctx->mutex_bridge);
-#endif
+// #ifdef DYNAREC
+//     pthread_mutex_destroy(&ctx->mutex_lock);
+// #else
+//     pthread_mutex_destroy(&ctx->mutex_trace);
+//     pthread_mutex_destroy(&ctx->mutex_lock);
+//     pthread_mutex_destroy(&ctx->mutex_tls);
+//     pthread_mutex_destroy(&ctx->mutex_thread);
+//     pthread_mutex_destroy(&ctx->mutex_bridge);
+// #endif
 
-    freeCycleLog(ctx);
+//     freeCycleLog(ctx);
 
-    box_free(ctx);
+//     box_free(ctx);
 }
 
-int AddElfHeader(box64context_t* ctx, elfheader_t* head) {
-    int idx = 0;
-    while(idx<ctx->elfsize && ctx->elfs[idx]) idx++;
-    if(idx == ctx->elfsize) {
-        if(idx==ctx->elfcap) {
-            // resize...
-            ctx->elfcap += 16;
-            ctx->elfs = (elfheader_t**)box_realloc(ctx->elfs, sizeof(elfheader_t*) * ctx->elfcap);
-        }
-        ctx->elfs[idx] = head;
-        ctx->elfsize++;
-    } else {
-        ctx->elfs[idx] = head;
-    }
-    printf_log(LOG_DEBUG, "Adding \"%s\" as #%d in elf collection\n", ElfName(head), idx);
-    return idx;
-}
+// int AddElfHeader(box64context_t* ctx, elfheader_t* head) {
+//     int idx = 0;
+//     while(idx<ctx->elfsize && ctx->elfs[idx]) idx++;
+//     if(idx == ctx->elfsize) {
+//         if(idx==ctx->elfcap) {
+//             // resize...
+//             ctx->elfcap += 16;
+//             ctx->elfs = (elfheader_t**)box_realloc(ctx->elfs, sizeof(elfheader_t*) * ctx->elfcap);
+//         }
+//         ctx->elfs[idx] = head;
+//         ctx->elfsize++;
+//     } else {
+//         ctx->elfs[idx] = head;
+//     }
+//     printf_log(LOG_DEBUG, "Adding \"%s\" as #%d in elf collection\n", "", idx);
+//     return idx;
+// }
 
-void RemoveElfHeader(box64context_t* ctx, elfheader_t* head) {
-    if(GetTLSBase(head)) {
-        // should remove the tls info
-        int tlsbase = GetTLSBase(head);
-        /*if(tlsbase == -ctx->tlssize) {
-            // not really correct, but will do for now
-            ctx->tlssize -= GetTLSSize(head);
-            if(!(++ctx->sel_serial))
-                ++ctx->sel_serial;
-        }*/
-    }
-    for(int i=0; i<ctx->elfsize; ++i)
-        if(ctx->elfs[i] == head) {
-            ctx->elfs[i] = NULL;
-            return;
-        }
-}
+// void RemoveElfHeader(box64context_t* ctx, elfheader_t* head) {
+//     if(GetTLSBase(head)) {
+//         // should remove the tls info
+//         int tlsbase = GetTLSBase(head);
+//         /*if(tlsbase == -ctx->tlssize) {
+//             // not really correct, but will do for now
+//             ctx->tlssize -= GetTLSSize(head);
+//             if(!(++ctx->sel_serial))
+//                 ++ctx->sel_serial;
+//         }*/
+//     }
+//     for(int i=0; i<ctx->elfsize; ++i)
+//         if(ctx->elfs[i] == head) {
+//             ctx->elfs[i] = NULL;
+//             return;
+//         }
+// }
 
-int AddTLSPartition(box64context_t* context, int tlssize) {
-    int oldsize = context->tlssize;
-    // should in fact first try to map a hole, but rewinding all elfs and checking filled space, like with the mapmem utilities
-    context->tlssize += tlssize;
-    context->tlsdata = box_realloc(context->tlsdata, context->tlssize);
-    memmove(context->tlsdata+tlssize, context->tlsdata, oldsize);   // move to the top, using memmove as regions will probably overlap
-    memset(context->tlsdata, 0, tlssize);           // fill new space with 0 (not mandatory)
-    // clean GS segment for current emu
-    if(my_context) {
-        //ResetSegmentsCache(thread_get_emu());
-        if(!(++context->sel_serial))
-            ++context->sel_serial;
-    }
+// int AddTLSPartition(box64context_t* context, int tlssize) {
+//     int oldsize = context->tlssize;
+//     // should in fact first try to map a hole, but rewinding all elfs and checking filled space, like with the mapmem utilities
+//     context->tlssize += tlssize;
+//     context->tlsdata = box_realloc(context->tlsdata, context->tlssize);
+//     memmove(context->tlsdata+tlssize, context->tlsdata, oldsize);   // move to the top, using memmove as regions will probably overlap
+//     memset(context->tlsdata, 0, tlssize);           // fill new space with 0 (not mandatory)
+//     // clean GS segment for current emu
+//     if(my_context) {
+//         //ResetSegmentsCache(thread_get_emu());
+//         if(!(++context->sel_serial))
+//             ++context->sel_serial;
+//     }
 
-    return -context->tlssize;   // negative offset
-}
+//     return -context->tlssize;   // negative offset
+// }
 

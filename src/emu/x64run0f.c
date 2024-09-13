@@ -8,6 +8,7 @@
 #include <signal.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <math.h>
 
 #include "debug.h"
 #include "box64stack.h"

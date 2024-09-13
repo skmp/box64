@@ -28,7 +28,7 @@
 #ifdef DYNAREC
 uintptr_t getX64Address(dynablock_t* db, uintptr_t arm_addr);
 
-void* LinkNext(x64emu_t* emu, uintptr_t addr, void* x2, uintptr_t* x3)
+void* linknext(x64emu_t* emu, uintptr_t addr, void* x2, uintptr_t* x3)
 {
     int is32bits = (R_CS == 0x23);
     #ifdef HAVE_TRACE
@@ -163,7 +163,7 @@ void DynaRun(x64emu_t* emu)
             emu->old_savedsp = emu->xSPSave;
             #endif
             emu->flags.jmpbuf_ready = 1;
-            #ifdef ANDROID
+            #if 1
             if((skip=sigsetjmp(*(JUMPBUFF*)emu->jmpbuf, 1)))
             #else
             if((skip=sigsetjmp(emu->jmpbuf, 1)))
@@ -219,7 +219,7 @@ void DynaRun(x64emu_t* emu)
                     my32_setcontext(emu, emu->uc_link);
                 else
                 #endif
-                    my_setcontext(emu, emu->uc_link);
+                    // my_setcontext(emu, emu->uc_link);
             }
         }
 #endif

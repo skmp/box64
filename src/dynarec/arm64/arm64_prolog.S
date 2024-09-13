@@ -6,8 +6,8 @@
 .text
 .align 4
 
-.global arm64_prolog
-arm64_prolog:
+.global _arm64_prolog
+_arm64_prolog:
     //save all 18 used register
     stp     x30, x29, [sp, -16]!  // save lr
     sub     sp,  sp, (8 * 18)

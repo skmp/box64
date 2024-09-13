@@ -6,12 +6,12 @@
 .text
 .align 4
 
-.extern LinkNext
+.extern _linknext
 
-.global arm64_next
+.global _arm64_next
 
     .8byte  0   // NULL pointer before arm64_next, for getDB
-arm64_next:
+_arm64_next:
     // emu is r0
     // IP address is r1
     sub     sp,  sp,  (8 * 12)
@@ -25,7 +25,7 @@ arm64_next:
     mov     x2, x30      // "from" is in lr, so put in x2
     add     x3, sp, 8*11    // x3 is address to change rip
     // call the function
-    bl      LinkNext
+    bl      _linknext
     // preserve return value
     mov     x3, x0
     // pop regs

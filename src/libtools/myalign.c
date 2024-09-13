@@ -3,7 +3,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <wchar.h>
-#include <sys/epoll.h>
+// #include <sys/epoll.h>
 #include <fts.h>
 #include <sys/stat.h>
 #include <sys/sem.h>

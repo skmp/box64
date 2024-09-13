@@ -1515,10 +1515,12 @@ x64emurun:
                 STEP2;
                 #endif
             } else {
+                R_RIP = addr;
                 #ifndef TEST_INTERPRETER
                 emit_interruption(emu, tmp8u, (void*)R_RIP);
                 STEP2;
                 #endif
+                if(emu->quit) goto fini;    // R_RIP is up to date when returning from x64Int3
             }
             break;
         case 0xCE:                      /* INTO */
@@ -2187,7 +2189,7 @@ if(emu->segs[_CS]!=0x33 && emu->segs[_CS]!=0x23) printf_log(LOG_NONE, "Warning, 
             my32_setcontext(emu, emu->uc_link);
         else
         #endif
-            my_setcontext(emu, emu->uc_link);
+            // my_setcontext(emu, emu->uc_link);
         addr = R_RIP;
         goto x64emurun;
     }

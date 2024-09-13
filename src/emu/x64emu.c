@@ -692,7 +692,7 @@ uint64_t ReadTSC(x64emu_t* emu)
     // fall back to gettime...
 #if !defined(NOGETCLOCK)
     struct timespec ts;
-    clock_gettime(CLOCK_MONOTONIC_COARSE, &ts);
+    clock_gettime(CLOCK_MONOTONIC, &ts);
     return (uint64_t)(ts.tv_sec) * 1000000000LL + ts.tv_nsec;
 #else
     struct timeval tv;

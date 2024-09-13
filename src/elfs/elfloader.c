@@ -5,9 +5,9 @@
 #include <elf.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#include <sys/sysmacros.h>
+// #include <sys/sysmacros.h>
 #include <sys/types.h>
-#include <link.h>
+// #include <link.h>
 #include <unistd.h>
 #include <errno.h>
 #ifndef _DLFCN_H

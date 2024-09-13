@@ -6,8 +6,8 @@
 .text
 .align 4
 
-.global arm64_epilog
-arm64_epilog:
+.global _arm64_epilog
+_arm64_epilog:
     //update register -> emu
     stp     x10, x11, [x0, (8 *  0)]
     stp     x12, x13, [x0, (8 *  2)]

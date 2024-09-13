@@ -23,7 +23,7 @@
 #include "x87emu_private.h"
 #include "x64primop.h"
 #include "x64trace.h"
-#include "wrapper.h"
+// #include "wrapper.h"
 #include "box64context.h"
 #include "librarian.h"
 #include "signals.h"
@@ -129,8 +129,8 @@ void x64Int3(x64emu_t* emu, uintptr_t* addr)
                 uint32_t *pu32 = NULL;
                 uint8_t *pu8 = NULL;
                 const char *s = bridge->name;
-                if(!s)
-                    s = GetNativeName((void*)a);
+                // if(!s)
+                //     s = GetNativeName((void*)a);
                 if(a==(uintptr_t)PltResolver64) {
                     if(cycle_log) {
                         uintptr_t addr = *((uint64_t*)(R_RSP));

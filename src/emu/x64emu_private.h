@@ -51,7 +51,8 @@ typedef struct emu_flags_s {
     uint32_t    jmpbuf_ready:1;   // the jmpbuf in the emu is ok and don't need refresh
 } emu_flags_t;
 
-#ifdef ANDROID
+
+#if 1
 #include <setjmp.h>
 #define JUMPBUFF sigjmp_buf
 #else

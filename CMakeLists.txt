@@ -123,6 +123,8 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
 endif()
 
+add_definitions(-Disnanf=isnan)
+add_definitions(-Dsincos=__sincos)
 if(RPI3ARM64)
     add_definitions(-DRPI)
     add_definitions(-DRPI3ARM64)
@@ -334,47 +336,46 @@ set_source_files_properties(
     HEADER_FILE_ONLY TRUE)
 
 set(ELFLOADER_SRC
-    "${BOX64_ROOT}/src/main.c"
-    "${BOX64_ROOT}/src/core.c"
-    "${BOX64_ROOT}/src/box64context.c"
-    "${BOX64_ROOT}/src/build_info.c"
-    "${BOX64_ROOT}/src/custommem.c"
-    "${BOX64_ROOT}/src/custommmap.c"
-    "${BOX64_ROOT}/src/dynarec/dynarec.c"
-    "${BOX64_ROOT}/src/elfs/elfloader.c"
-    "${BOX64_ROOT}/src/elfs/elfparser.c"
-    "${BOX64_ROOT}/src/elfs/elfhash.c"
-    "${BOX64_ROOT}/src/elfs/elfload_dump.c"
-    "${BOX64_ROOT}/src/elfs/elfdwarf_private.c"
-    "${BOX64_ROOT}/src/emu/x64compstrings.c"
+    # "${BOX64_ROOT}/src/main.c"
+    # "${BOX64_ROOT}/src/box64context.c"
+    # "${BOX64_ROOT}/src/build_info.c"
+    # # "${BOX64_ROOT}/src/custommem.c"
+    # # "${BOX64_ROOT}/src/custommmap.c"
+    # "${BOX64_ROOT}/src/dynarec/dynarec.c"
+    # # "${BOX64_ROOT}/src/elfs/elfloader.c"
+    # # "${BOX64_ROOT}/src/elfs/elfparser.c"
+    # # "${BOX64_ROOT}/src/elfs/elfhash.c"
+    # # "${BOX64_ROOT}/src/elfs/elfload_dump.c"
+    # "${BOX64_ROOT}/src/elfs/elfdwarf_private.c"
+    # "${BOX64_ROOT}/src/emu/x64compstrings.c"
     "${BOX64_ROOT}/src/emu/x64emu.c"
-    "${BOX64_ROOT}/src/emu/x64int3.c"
-    "${BOX64_ROOT}/src/emu/x87emu_private.c"
-    "${BOX64_ROOT}/src/emu/x64primop.c"
-    "${BOX64_ROOT}/src/emu/x64run_private.c"
-    "${BOX64_ROOT}/src/emu/x64shaext.c"
-    "${BOX64_ROOT}/src/emu/x64syscall.c"
-    "${BOX64_ROOT}/src/emu/x64tls.c"
-    "${BOX64_ROOT}/src/emu/x64trace.c"
-    "${BOX64_ROOT}/src/librarian/librarian.c"
-    "${BOX64_ROOT}/src/librarian/library.c"
-    "${BOX64_ROOT}/src/librarian/dictionnary.c"
-    "${BOX64_ROOT}/src/librarian/symbols.c"
-    "${BOX64_ROOT}/src/libtools/auxval.c"
-    "${BOX64_ROOT}/src/libtools/myalign.c"
-    "${BOX64_ROOT}/src/libtools/signals.c"
-    "${BOX64_ROOT}/src/libtools/threads.c"
-    "${BOX64_ROOT}/src/tools/bitutils.c"
-    "${BOX64_ROOT}/src/tools/box64stack.c"
-    "${BOX64_ROOT}/src/tools/bridge.c"
-    "${BOX64_ROOT}/src/tools/callback.c"
-    "${BOX64_ROOT}/src/tools/my_cpuid.c"
-    "${BOX64_ROOT}/src/tools/fileutils.c"
-    "${BOX64_ROOT}/src/tools/pathcoll.c"
-    "${BOX64_ROOT}/src/tools/rbtree.c"
-    "${BOX64_ROOT}/src/tools/rcfile.c"
-    "${BOX64_ROOT}/src/tools/wine_tools.c"
-    "${BOX64_ROOT}/src/wrapped/generated/wrapper.c"
+    # "${BOX64_ROOT}/src/emu/x64int3.c"
+    # "${BOX64_ROOT}/src/emu/x87emu_private.c"
+    # "${BOX64_ROOT}/src/emu/x64primop.c"
+    # "${BOX64_ROOT}/src/emu/x64run_private.c"
+    # "${BOX64_ROOT}/src/emu/x64shaext.c"
+    # # "${BOX64_ROOT}/src/emu/x64syscall.c"
+    # "${BOX64_ROOT}/src/emu/x64tls.c"
+    # "${BOX64_ROOT}/src/emu/x64trace.c"
+    # "${BOX64_ROOT}/src/librarian/librarian.c"
+    # "${BOX64_ROOT}/src/librarian/library.c"
+    # "${BOX64_ROOT}/src/librarian/dictionnary.c"
+    # "${BOX64_ROOT}/src/librarian/symbols.c"
+    # # "${BOX64_ROOT}/src/libtools/auxval.c"
+    # # "${BOX64_ROOT}/src/libtools/myalign.c"
+    # # "${BOX64_ROOT}/src/libtools/signals.c"
+    # # "${BOX64_ROOT}/src/libtools/threads.c"
+    # "${BOX64_ROOT}/src/tools/bitutils.c"
+    # "${BOX64_ROOT}/src/tools/box64stack.c"
+    # "${BOX64_ROOT}/src/tools/bridge.c"
+    # "${BOX64_ROOT}/src/tools/callback.c"
+    # "${BOX64_ROOT}/src/tools/my_cpuid.c"
+    # "${BOX64_ROOT}/src/tools/fileutils.c"
+    # "${BOX64_ROOT}/src/tools/pathcoll.c"
+    # "${BOX64_ROOT}/src/tools/rbtree.c"
+    # "${BOX64_ROOT}/src/tools/rcfile.c"
+    # "${BOX64_ROOT}/src/tools/wine_tools.c"
+    # "${BOX64_ROOT}/src/wrapped/generated/wrapper.c"
 )
 if(NOT STATICBUILD)
     list(APPEND ELFLOADER_SRC
@@ -406,12 +407,12 @@ if(BOX32)
     )
 else()
     list(APPEND ELFLOADER_SRC
-        "${BOX64_ROOT}/src/emu/x86syscall.c"
+        # "${BOX64_ROOT}/src/emu/x86syscall.c"
     )
 endif()
 if(NOT ANDROID)
     list(APPEND ELFLOADER_SRC
-        "${BOX64_ROOT}/src/libtools/obstack.c"
+        # "${BOX64_ROOT}/src/libtools/obstack.c"
     )
 endif()
 
@@ -461,16 +462,16 @@ set(INTERPRETER
 
 if(STATICBUILD)
 set(WRAPPEDS
-    "${BOX64_ROOT}/src/wrapped/wrappedldlinux.c"
-    #"${BOX64_ROOT}/src/wrapped/wrappedlibbsd.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedlibc.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedlibcmusl.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedlibdl.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedlibm.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedutil.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedlibresolv.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedlibrt.c"
-    "${BOX64_ROOT}/src/wrapped/wrappedlibpthread.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedldlinux.c"
+    # #"${BOX64_ROOT}/src/wrapped/wrappedlibbsd.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedlibc.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedlibcmusl.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedlibdl.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedlibm.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedutil.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedlibresolv.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedlibrt.c"
+    # "${BOX64_ROOT}/src/wrapped/wrappedlibpthread.c"
 )
 else()
 set(WRAPPEDS
@@ -739,18 +740,18 @@ endforeach()
 
 set(WRAPPER "${BOX64_ROOT}/src/wrapped/generated/wrapper.c" "${BOX64_ROOT}/src/wrapped/generated/wrapper.h")
 
-if(NOT CI)
-    add_custom_command(
-        OUTPUT "${BOX64_ROOT}/src/wrapped/generated/functions_list.txt"
-        COMMAND "${PYTHON_EXECUTABLE}" "${BOX64_ROOT}/rebuild_wrappers.py"
-        "${BOX64_ROOT}"
-        "PANDORA" "HAVE_LD80BITS" "NOALIGN" "HAVE_TRACE" "ANDROID" "TERMUX" "STATICBUILD" "--"
-        ${WRAPPEDS_HEAD}
-        MAIN_DEPENDENCY "${BOX64_ROOT}/rebuild_wrappers.py"
-        DEPENDS ${WRAPPEDS} ${WRAPPEDS_HEAD}
-        BYPRODUCTS ${WRAPPER}
-    )
-endif ()
+# if(NOT CI)
+#     add_custom_command(
+#         OUTPUT "${BOX64_ROOT}/src/wrapped/generated/functions_list.txt"
+#         COMMAND "${PYTHON_EXECUTABLE}" "${BOX64_ROOT}/rebuild_wrappers.py"
+#         "${BOX64_ROOT}"
+#         "PANDORA" "HAVE_LD80BITS" "NOALIGN" "HAVE_TRACE" "ANDROID" "TERMUX" "STATICBUILD" "--"
+#         ${WRAPPEDS_HEAD}
+#         MAIN_DEPENDENCY "${BOX64_ROOT}/rebuild_wrappers.py"
+#         DEPENDS ${WRAPPEDS} ${WRAPPEDS_HEAD}
+#         BYPRODUCTS ${WRAPPER}
+#     )
+# endif ()
 
 #add_custom_command(
 #    OUTPUT "${BOX64_ROOT}/src/dynarec/last_run.txt"
@@ -760,7 +761,7 @@ endif ()
 #    BYPRODUCTS "${BOX64_ROOT}/src/dynarec/arm64_printer.c"
 #)
 
-add_custom_target(WRAPPERS DEPENDS "${BOX64_ROOT}/src/wrapped/generated/functions_list.txt")
+# add_custom_target(WRAPPERS DEPENDS "${BOX64_ROOT}/src/wrapped/generated/functions_list.txt")
 #add_custom_target(PRINTER DEPENDS "${BOX64_ROOT}/src/dynarec/last_run.txt")
 
 if(BOX32)
@@ -992,10 +993,10 @@ if(DYNAREC)
     set_target_properties(native_pass3 PROPERTIES COMPILE_FLAGS "-DSTEP=3")
     add_library(test_interpreter OBJECT ${INTERPRETER})
     set_target_properties(test_interpreter PROPERTIES COMPILE_FLAGS "-DTEST_INTERPRETER")
-    add_dependencies(native_pass0 WRAPPERS)
-    add_dependencies(native_pass1 WRAPPERS)
-    add_dependencies(native_pass2 WRAPPERS)
-    add_dependencies(native_pass3 WRAPPERS)
+    # add_dependencies(native_pass0 WRAPPERS)
+    # add_dependencies(native_pass1 WRAPPERS)
+    # add_dependencies(native_pass2 WRAPPERS)
+    # add_dependencies(native_pass3 WRAPPERS)
     if(BOX32)
         add_dependencies(native_pass0 WRAPPERS32)
         add_dependencies(native_pass1 WRAPPERS32)
@@ -1032,7 +1033,7 @@ add_library(interpreter OBJECT ${INTERPRETER})
 
 add_executable(${BOX64} ${ELFLOADER_SRC} ${WRAPPEDS} ${WRAPPEDS32} "${BOX64_ROOT}/src/git_head.h")
 set_target_properties(${BOX64} PROPERTIES ENABLE_EXPORTS ON)
-add_dependencies(${BOX64} WRAPPERS)
+# add_dependencies(${BOX64} WRAPPERS)
 if(BOX32)
     add_dependencies(${BOX64} WRAPPERS32)
 endif()

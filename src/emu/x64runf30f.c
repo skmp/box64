@@ -44,8 +44,9 @@ uintptr_t RunF30F(x64emu_t *emu, rex_t rex, uintptr_t addr)
     #endif
 
     #ifdef __clang__
-    extern int isinff(float);
-    extern int isnanf(float);
+    // #define isinf(x) (!_finite(x))
+    // extern int isinff(float);
+    // extern int isnanf(float);
     #endif
 
     opcode = F8;

@@ -24,7 +24,7 @@
 #include "x64trace.h"
 #include "dynarec.h"
 #include "bridge.h"
-#include "myalign.h"
+// #include "myalign.h"
 #ifdef DYNAREC
 #include "dynablock.h"
 #include "dynarec/native_lock.h"
@@ -40,34 +40,34 @@ typedef void (*vFpi_t)(void*, int);
 typedef int (*iFppip_t)(void*, void*, int, void*);
 typedef int (*iFli_t)(long unsigned int, int);
 
-static vFppp_t real_pthread_cleanup_push_defer = NULL;
-static vFpi_t real_pthread_cleanup_pop_restore = NULL;
-static iFppip_t real_pthread_cond_clockwait = NULL;
+// static vFppp_t real_pthread_cleanup_push_defer = NULL;
+// static vFpi_t real_pthread_cleanup_pop_restore = NULL;
+// static iFppip_t real_pthread_cond_clockwait = NULL;
 void _pthread_cleanup_push(void* buffer, void* routine, void* arg);	// declare hidden functions
 void _pthread_cleanup_pop(void* buffer, int exec);
 // with glibc 2.34+, pthread_kill changed behaviour and might break some program, so using old version if possible
 // it will be pthread_kill@GLIBC_2.17 on aarch64, but it's GLIBC_2.2.5 on x86_64
-static iFli_t real_phtread_kill_old = NULL;
+// static iFli_t real_phtread_kill_old = NULL;
 
 typedef struct threadstack_s {
 	void* 	stack;
 	size_t 	stacksize;
 } threadstack_t;
 
-typedef struct x64_unwind_buff_s {
-	struct {
-		jump_buff_x64_t		__cancel_jmp_buf;
-		int					__mask_was_saved;
-	} __cancel_jmp_buf[1];
-	void *__pad[4];
-} x64_unwind_buff_t __attribute__((__aligned__));
+// typedef struct x64_unwind_buff_s {
+// 	struct {
+// 		jump_buff_x64_t		__cancel_jmp_buf;
+// 		int					__mask_was_saved;
+// 	} __cancel_jmp_buf[1];
+// 	void *__pad[4];
+// } x64_unwind_buff_t __attribute__((__aligned__));
 
 typedef void(*vFv_t)();
 
 KHASH_MAP_INIT_INT64(threadstack, threadstack_t*)
-#ifndef ANDROID
-KHASH_MAP_INIT_INT64(cancelthread, __pthread_unwind_buf_t*)
-#endif
+// #ifndef ANDROID
+// KHASH_MAP_INIT_INT64(cancelthread, __pthread_unwind_buf_t*)
+// #endif
 
 void CleanStackSize(box64context_t* context)
 {
@@ -144,22 +144,22 @@ static void emuthread_destroy(void* p)
 
 static void emuthread_cancel(void* p)
 {
-	emuthread_t *et = (emuthread_t*)p;
-	if(!et)
-		return;
-	// check cancels threads
-	for(int i=et->cancel_size-1; i>=0; --i) {
-		et->emu->flags.quitonlongjmp = 0;
-		my_longjmp(et->emu, ((x64_unwind_buff_t*)et->cancels[i])->__cancel_jmp_buf, 1);
-		DynaRun(et->emu);	// will return after a __pthread_unwind_next()
-	}
-	#ifdef BOX32
-	/*if(box64_is32bits)
-		to_hash_d(et->self);*/ // not removing hash for old pthread_t
-	#endif
-	box_free(et->cancels);
-	et->cancels=NULL;
-	et->cancel_size = et->cancel_cap = 0;
+	// emuthread_t *et = (emuthread_t*)p;
+	// if(!et)
+	// 	return;
+	// // check cancels threads
+	// for(int i=et->cancel_size-1; i>=0; --i) {
+	// 	et->emu->flags.quitonlongjmp = 0;
+	// 	my_longjmp(et->emu, ((x64_unwind_buff_t*)et->cancels[i])->__cancel_jmp_buf, 1);
+	// 	DynaRun(et->emu);	// will return after a __pthread_unwind_next()
+	// }
+	// #ifdef BOX32
+	// /*if(box64_is32bits)
+	// 	to_hash_d(et->self);*/ // not removing hash for old pthread_t
+	// #endif
+	// box_free(et->cancels);
+	// et->cancels=NULL;
+	// et->cancel_size = et->cancel_cap = 0;
 }
 
 void thread_set_emu(x64emu_t* emu)
@@ -190,26 +190,26 @@ void thread_set_emu(x64emu_t* emu)
 x64emu_t* thread_get_emu()
 {
 	emuthread_t *et = (emuthread_t*)pthread_getspecific(thread_key);
-	if(!et) {
-		int stacksize = 2*1024*1024;
-		// try to get stack size of the thread
-		pthread_attr_t attr;
-		if(!pthread_getattr_np(pthread_self(), &attr)) {
-			size_t stack_size;
-        	void *stack_addr;
-			if(!pthread_attr_getstack(&attr, &stack_addr, &stack_size))
-				if(stack_size)
-					stacksize = stack_size;
-			pthread_attr_destroy(&attr);
-		}
-		void* stack = internal_mmap(NULL, stacksize, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS|MAP_GROWSDOWN, -1, 0);
-		if(stack!=MAP_FAILED)
-			setProtection((uintptr_t)stack, stacksize, PROT_READ|PROT_WRITE);
-		x64emu_t *emu = NewX64Emu(my_context, 0, (uintptr_t)stack, stacksize, 1);
-		SetupX64Emu(emu, NULL);
-		thread_set_emu(emu);
-		return emu;
-	}
+	// if(!et) {
+	// 	int stacksize = 2*1024*1024;
+	// 	// try to get stack size of the thread
+	// 	pthread_attr_t attr;
+	// 	if(!pthread_getattr_np(pthread_self(), &attr)) {
+	// 		size_t stack_size;
+    //     	void *stack_addr;
+	// 		if(!pthread_attr_getstack(&attr, &stack_addr, &stack_size))
+	// 			if(stack_size)
+	// 				stacksize = stack_size;
+	// 		pthread_attr_destroy(&attr);
+	// 	}
+	// 	void* stack = internal_mmap(NULL, stacksize, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
+	// 	if(stack!=MAP_FAILED)
+	// 		setProtection((uintptr_t)stack, stacksize, PROT_READ|PROT_WRITE);
+	// 	x64emu_t *emu = NewX64Emu(my_context, 0, (uintptr_t)stack, stacksize, 1);
+	// 	SetupX64Emu(emu, NULL);
+	// 	thread_set_emu(emu);
+	// 	return emu;
+	// }
 	return et->emu;
 }
 
@@ -247,6 +247,7 @@ static void* pthread_routine(void* p)
 	return ret;
 }
 
+#if 0
 #ifdef NOALIGN
 #define PTHREAD_ATTR_ALIGN(A)
 #define PTHREAD_ATTR_UNALIGN(A)
@@ -1171,30 +1172,32 @@ EXPORT int my_pthread_barrier_init(x64emu_t* emu, pthread_barrier_t* bar, my_bar
 
 #endif
 
+#endif
+
 void init_pthread_helper()
 {
 	#ifdef BOX32
 	if(box64_is32bits)
 		init_pthread_helper_32();
 	#endif
-	real_pthread_cleanup_push_defer = (vFppp_t)dlsym(NULL, "_pthread_cleanup_push_defer");
-	real_pthread_cleanup_pop_restore = (vFpi_t)dlsym(NULL, "_pthread_cleanup_pop_restore");
-	real_pthread_cond_clockwait = (iFppip_t)dlsym(NULL, "pthread_cond_clockwait");
+	// real_pthread_cleanup_push_defer = (vFppp_t)dlsym(NULL, "_pthread_cleanup_push_defer");
+	// real_pthread_cleanup_pop_restore = (vFpi_t)dlsym(NULL, "_pthread_cleanup_pop_restore");
+	// real_pthread_cond_clockwait = (iFppip_t)dlsym(NULL, "pthread_cond_clockwait");
 
 	// search for older symbol for pthread_kill
-	{
-		char buff[50];
-		for(int i=0; i<34 && !real_phtread_kill_old; ++i) {
-			snprintf(buff, 50, "GLIBC_2.%d", i);
-			real_phtread_kill_old = (iFli_t)dlvsym(NULL, "pthread_kill", buff);
-		}
-	}
-	if(!real_phtread_kill_old)
-		real_phtread_kill_old = (iFli_t)dlvsym(NULL, "pthread_kill", "GLIBC_2.2.5");
-	if(!real_phtread_kill_old) {
-		printf_log(LOG_INFO, "Warning, older then 2.34 pthread_kill not found, using current one\n");
-		real_phtread_kill_old = (iFli_t)pthread_kill;
-	}
+	// {
+	// 	char buff[50];
+	// 	for(int i=0; i<34 && !real_phtread_kill_old; ++i) {
+	// 		snprintf(buff, 50, "GLIBC_2.%d", i);
+	// 		real_phtread_kill_old = (iFli_t)dlvsym(NULL, "pthread_kill", buff);
+	// 	}
+	// }
+	// if(!real_phtread_kill_old)
+	// 	real_phtread_kill_old = (iFli_t)dlvsym(NULL, "pthread_kill", "GLIBC_2.2.5");
+	// if(!real_phtread_kill_old) {
+	// 	printf_log(LOG_INFO, "Warning, older then 2.34 pthread_kill not found, using current one\n");
+	// 	real_phtread_kill_old = (iFli_t)pthread_kill;
+	// }
 
 	pthread_key_create(&thread_key, emuthread_destroy);
 	pthread_setspecific(thread_key, NULL);

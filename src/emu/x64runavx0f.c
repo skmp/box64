@@ -31,8 +31,9 @@
 #include "modrm.h"
 
 #ifdef __clang__
-extern int isinff(float);
-extern int isnanf(float);
+// #define isinf(x) (!_finite(x))
+// extern int isinff(float);
+// extern int isnanf(float);
 #endif
 
 #ifdef TEST_INTERPRETER
