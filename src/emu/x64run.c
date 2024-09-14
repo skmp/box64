@@ -1520,6 +1520,7 @@ x64emurun:
                 emit_interruption(emu, tmp8u, (void*)R_RIP);
                 STEP2;
                 #endif
+                addr = R_RIP;
                 if(emu->quit) goto fini;    // R_RIP is up to date when returning from x64Int3
             }
             break;
